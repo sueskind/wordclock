@@ -14,9 +14,12 @@ Libraries used:
  - Photoresistor for brightness measurement
 
 ## Functionality
+wordclock-basic:
  - Show current time to 5 min accuracy
  - Memorize time even when unplugged
- - *Adjust brightness to room's lighting (WIP)*
+ 
+wordclock-advanced (additionally to basic):
+ - Adjust brightness to room's lighting
  - *Color effects (WIP)*
  - *Startup animation (WIP)*
  - *Play Tetris (WIP)*

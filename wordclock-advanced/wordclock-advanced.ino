@@ -1,19 +1,30 @@
 #include <FastLED.h>
 #include "RTClib.h"
 
+// RTC
 RTC_DS3231 rtc;
 DateTime now;
 
-#define LED_TYPE    WS2812B
+// LEDs
+#define LED_TYPE WS2812B
 #define COLOR_ORDER GRB
-#define DATA_PIN 2
-#define BRIGHTNESS 50
-
+#define LED_PIN 2
 #define ROWS 11
 #define COLS 11
 #define NUM_LEDS 121
+#define BRIGHTNESS_MAX 150 // up to 255 (but high numbers draw a lot of power with little effect)
+#define BRIGHTNESS_MIN 3   // down to 0 (though very small values omit some colors)
 CRGB leds[NUM_LEDS];
 
+// Photoresistor light sensor
+#define SENSOR_PIN A3
+#define SENSOR_BRIGHT 900
+#define SENSOR_DARK 100
+#define FADING_SPEED 0.05    // 0 - 1
+float previousBrightness = 0;
+float nextBrightness;
+
+// word definitions
 #define ES_IST      setLEDs(0,0,1);setLEDs(0,3,5);
 #define FUENF       setLEDs(0,7,10);
 #define ZWANZIG     setLEDs(1,0,6);
@@ -39,15 +50,12 @@ CRGB leds[NUM_LEDS];
 #define UHR         setLEDs(10,8,10);
 
 void setup() {
-  FastLED.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
-  FastLED.setBrightness(BRIGHTNESS);
-
+  FastLED.addLeds<LED_TYPE,LED_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+  
   // set the compiling machine time
   if (rtc.lostPower()) {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
-
-  // Serial.begin(9600);
 }
 
 // int step = 0; // mock
@@ -62,10 +70,6 @@ void loop() {
 
   now = rtc.now();
   unsigned int shifted = (now.hour() * 60 + now.minute() + 35) % (12 * 60);
-
-  // Serial.print(now.hour());
-  // Serial.print(" ");
-  // Serial.println(now.minute());
 
   ES_IST
   
@@ -115,9 +119,32 @@ void loop() {
       FUENF VOR
     }
   }
-  
+
+  updateBrightness();
   FastLED.show();
-  delay(5000);
+  delay(200);
+}
+
+void updateBrightness(){
+  // Assuming linear relationship between all observables
+  int env = analogRead(SENSOR_PIN);
+  if(env > SENSOR_BRIGHT){
+    nextBrightness = BRIGHTNESS_MAX;
+  }else if(env < SENSOR_DARK){
+    nextBrightness = BRIGHTNESS_MIN;
+  }else{
+    // straight line equation
+    nextBrightness = float(BRIGHTNESS_MAX - BRIGHTNESS_MIN)
+                     / float(SENSOR_BRIGHT - SENSOR_DARK)
+                     * float(env - SENSOR_DARK)
+                     + float(BRIGHTNESS_MIN);
+  }
+  
+  // calculating weighted average ensures proper fading
+  nextBrightness = nextBrightness * FADING_SPEED
+                   + previousBrightness * (1 - FADING_SPEED);
+  FastLED.setBrightness(nextBrightness);
+  previousBrightness = nextBrightness;
 }
 
 void setLEDs(byte row, byte from, byte to){
