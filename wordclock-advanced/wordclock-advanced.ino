@@ -24,6 +24,11 @@ CRGB leds[NUM_LEDS];
 float previousBrightness = 0;
 float nextBrightness;
 
+// night off mode (since nobody sees it during the night)
+// **do things exist while nobody sees it?**
+#define OFF_FROM 1  // 1:00
+#define OFF_TO 6    // 6:00
+
 // word definitions
 #define ES_IST      setLEDs(0,0,1);setLEDs(0,3,5);
 #define FUENF       setLEDs(0,7,10);
@@ -69,6 +74,13 @@ void loop() {
   // now = DateTime(2000,1,1,step / 60 % 24,step % 60);
 
   now = rtc.now();
+
+  if(now.hour() >= OFF_FROM && now.hour() < OFF_TO){
+    FastLED.show();
+    delay(1000 * 60);
+    return; // continue main loop
+  }
+  
   unsigned int shifted = (now.hour() * 60 + now.minute() + 35) % (12 * 60);
 
   ES_IST
