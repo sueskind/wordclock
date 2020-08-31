@@ -19,7 +19,7 @@ CRGB leds[NUM_LEDS];
 // Buttons, nano has interrupt pins D2 and D3
 #define BUTTON1 2
 #define BUTTON2 3
-unsigned long lastInterrupt = 0;
+volatile unsigned long lastInterrupt = 0;
 
 // colors, cycled by BUTTON1
 #define NUM_COLORS 8
@@ -160,7 +160,7 @@ void loop() {
 
 void button1Interrupted(){
   // software solution to avoid double triggering interrupt
-  if(millis() - lastInterrupt > 400){
+  if(abs(millis() - lastInterrupt) > 400){
     hueIndex = (hueIndex + 1) % NUM_COLORS;
     lastInterrupt = millis();
   }
