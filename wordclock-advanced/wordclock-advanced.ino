@@ -78,63 +78,63 @@ void loop() {
   if(now.hour() >= OFF_FROM && now.hour() < OFF_TO){
     FastLED.show();
     delay(1000 * 60);
-    return; // continue main loop
-  }
-  
-  unsigned int shifted = (now.hour() * 60 + now.minute() + 35) % (12 * 60);
-
-  ES_IST
-  
-  // midnight
-  if(now.hour() == 0 && now.minute() < 5){
-    MITTERN ACHT
-
   }else{
-    switch(shifted / 60 % 12){
-      case 0: ZWOELF break;
-      case 1: EIN if(now.minute() % 60 >= 5) S break; // s not at full hour
-      case 2: ZWEI break;
-      case 3: DREI break;
-      case 4: VIER break;
-      case 5: FUENF_h break;
-      case 6: SECHS break;
-      case 7: SIEBEN break;
-      case 8: ACHT break;
-      case 9: NEUN break;
-      case 10: ZEHN_h break;
-      case 11: ELF break;
-    }
-
-    if(now.minute() < 5){
-      UHR
-    }else if(now.minute() < 10){
-      FUENF NACH
-    }else if(now.minute() < 15){
-      ZEHN NACH
-    }else if(now.minute() < 20){
-      VIERTEL NACH
-    }else if(now.minute() < 25){
-      ZWANZIG NACH
-    }else if(now.minute() < 30){
-      FUENF VOR HALB
-    }else if(now.minute() < 35){
-      HALB
-    }else if(now.minute() < 40){
-      FUENF NACH HALB
-    }else if(now.minute() < 45){
-      ZWANZIG VOR
-    }else if(now.minute() < 50){
-      VIERTEL VOR
-    }else if(now.minute() < 55){
-      ZEHN VOR
+    
+    unsigned int shifted = (now.hour() * 60 + now.minute() + 35) % (12 * 60);
+  
+    ES_IST
+    
+    // midnight
+    if(now.hour() == 0 && now.minute() < 5){
+      MITTERN ACHT
+  
     }else{
-      FUENF VOR
+      switch(shifted / 60 % 12){
+        case 0: ZWOELF break;
+        case 1: EIN if(now.minute() % 60 >= 5) S break; // s not at full hour
+        case 2: ZWEI break;
+        case 3: DREI break;
+        case 4: VIER break;
+        case 5: FUENF_h break;
+        case 6: SECHS break;
+        case 7: SIEBEN break;
+        case 8: ACHT break;
+        case 9: NEUN break;
+        case 10: ZEHN_h break;
+        case 11: ELF break;
+      }
+  
+      if(now.minute() < 5){
+        UHR
+      }else if(now.minute() < 10){
+        FUENF NACH
+      }else if(now.minute() < 15){
+        ZEHN NACH
+      }else if(now.minute() < 20){
+        VIERTEL NACH
+      }else if(now.minute() < 25){
+        ZWANZIG NACH
+      }else if(now.minute() < 30){
+        FUENF VOR HALB
+      }else if(now.minute() < 35){
+        HALB
+      }else if(now.minute() < 40){
+        FUENF NACH HALB
+      }else if(now.minute() < 45){
+        ZWANZIG VOR
+      }else if(now.minute() < 50){
+        VIERTEL VOR
+      }else if(now.minute() < 55){
+        ZEHN VOR
+      }else{
+        FUENF VOR
+      }
     }
+  
+    updateBrightness();
+    FastLED.show();
+    delay(200);
   }
-
-  updateBrightness();
-  FastLED.show();
-  delay(200);
 }
 
 void updateBrightness(){
