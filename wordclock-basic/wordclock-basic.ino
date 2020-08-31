@@ -6,7 +6,7 @@ DateTime now;
 
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
-#define LED_PIN 2
+#define LED_PIN 5
 #define BRIGHTNESS 50
 
 #define ROWS 11

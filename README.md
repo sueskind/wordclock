@@ -17,10 +17,13 @@ Libraries used:
 wordclock-basic:
  - Show current time to 5 min accuracy
  - Memorize time even when unplugged
+ - Turn off light during the night
  
 wordclock-advanced (additionally to basic):
  - Adjust brightness to room's lighting
+ - Change color on button press
+ - *Random shine effect (slow flickering/blinkin) (WIP)*
  - *Color effects (WIP)*
- - *Startup animation (WIP)*
- - *Play Tetris (WIP)*
- - *Play Pong (WIP)*
+ - *Random animations when display changes (WIP)*
+ - *Play Tetris (WIP, ESP32 needed)*
+ - *Play Pong (WIP, ESP32 needed)*

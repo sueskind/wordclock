@@ -8,7 +8,7 @@ DateTime now;
 // LEDs
 #define LED_TYPE WS2812B
 #define COLOR_ORDER GRB
-#define LED_PIN 2
+#define LED_PIN 5
 #define ROWS 11
 #define COLS 11
 #define NUM_LEDS 121
@@ -16,12 +16,23 @@ DateTime now;
 #define BRIGHTNESS_MIN 3   // down to 0 (though very small values omit some colors)
 CRGB leds[NUM_LEDS];
 
+// Buttons, nano has interrupt pins D2 and D3
+#define BUTTON1 2
+#define BUTTON2 3
+
+// colors, cycled by BUTTON1
+#define NUM_COLORS 8
+byte hues[NUM_COLORS] = {0, 32, 64, 96, 128, 160, 192, 224};
+volatile byte hueIndex;
+byte saturation = 255;
+byte value = 255;
+
 // Photoresistor light sensor
 #define SENSOR_PIN A3
 #define SENSOR_BRIGHT 900
 #define SENSOR_DARK 100
 #define FADING_SPEED 0.05    // 0 - 1
-float previousBrightness = 0;
+float previousBrightness = 0.0;
 float nextBrightness;
 
 // night off mode (since nobody sees it during the night)
@@ -56,6 +67,10 @@ float nextBrightness;
 
 void setup() {
   FastLED.addLeds<LED_TYPE,LED_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+  
+  hueIndex = byte(random(NUM_COLORS));
+  pinMode(BUTTON1, INPUT);
+  attachInterrupt(0, button1Interrupted, FALLING);
   
   // set the compiling machine time
   if (rtc.lostPower()) {
@@ -141,6 +156,10 @@ void loop() {
   }
 }
 
+void button1Interrupted(){
+  hueIndex = (hueIndex + 1) % NUM_COLORS;
+}
+
 void updateBrightness(){
   // Assuming linear relationship between all observables
   int env = analogRead(SENSOR_PIN);
@@ -171,7 +190,7 @@ void setLEDs(byte row, byte from, byte to){
 
 void setLED(byte row, byte col){
   // TODO something fancier with colors
-  leds[idx(row, col)].setRGB(170, 0, 255);
+  leds[idx(row, col)].setHSV(hues[hueIndex], saturation, value);
 }
 
 byte idx(byte row, byte col){
