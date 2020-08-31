@@ -79,7 +79,8 @@ void loop() {
     FastLED.show();
     delay(1000 * 60);
   }else{
-    
+
+    // shift time for 
     unsigned int shifted = (now.hour() * 60 + now.minute() + 35) % (12 * 60);
   
     ES_IST
@@ -103,28 +104,31 @@ void loop() {
         case 10: ZEHN_h break;
         case 11: ELF break;
       }
-  
-      if(now.minute() < 5){
+
+      // so it says 5 after X from X:03 to X:07 etc.
+      byte shiftedMinute = now.minute() + 2;
+      
+      if(shiftedMinute % 60 < 5){
         UHR
-      }else if(now.minute() < 10){
+      }else if(shiftedMinute < 10){
         FUENF NACH
-      }else if(now.minute() < 15){
+      }else if(shiftedMinute < 15){
         ZEHN NACH
-      }else if(now.minute() < 20){
+      }else if(shiftedMinute < 20){
         VIERTEL NACH
-      }else if(now.minute() < 25){
+      }else if(shiftedMinute < 25){
         ZWANZIG NACH
-      }else if(now.minute() < 30){
+      }else if(shiftedMinute < 30){
         FUENF VOR HALB
-      }else if(now.minute() < 35){
+      }else if(shiftedMinute < 35){
         HALB
-      }else if(now.minute() < 40){
+      }else if(shiftedMinute < 40){
         FUENF NACH HALB
-      }else if(now.minute() < 45){
+      }else if(shiftedMinute < 45){
         ZWANZIG VOR
-      }else if(now.minute() < 50){
+      }else if(shiftedMinute < 50){
         VIERTEL VOR
-      }else if(now.minute() < 55){
+      }else if(shiftedMinute < 55){
         ZEHN VOR
       }else{
         FUENF VOR
