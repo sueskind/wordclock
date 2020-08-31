@@ -19,6 +19,7 @@ CRGB leds[NUM_LEDS];
 // Buttons, nano has interrupt pins D2 and D3
 #define BUTTON1 2
 #define BUTTON2 3
+unsigned long lastInterrupt = 0;
 
 // colors, cycled by BUTTON1
 #define NUM_COLORS 8
@@ -67,10 +68,11 @@ float nextBrightness;
 
 void setup() {
   FastLED.addLeds<LED_TYPE,LED_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
-  
+
+  randomSeed(analogRead(0));
   hueIndex = byte(random(NUM_COLORS));
   pinMode(BUTTON1, INPUT);
-  attachInterrupt(0, button1Interrupted, FALLING);
+  attachInterrupt(0, button1Interrupted, RISING);
   
   // set the compiling machine time
   if (rtc.lostPower()) {
@@ -157,7 +159,11 @@ void loop() {
 }
 
 void button1Interrupted(){
-  hueIndex = (hueIndex + 1) % NUM_COLORS;
+  // software solution to avoid double triggering interrupt
+  if(millis() - lastInterrupt > 100){
+    hueIndex = (hueIndex + 1) % NUM_COLORS;
+    lastInterrupt = millis();
+  }
 }
 
 void updateBrightness(){
