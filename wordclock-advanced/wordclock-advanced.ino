@@ -160,7 +160,7 @@ void loop() {
 
 void button1Interrupted(){
   // software solution to avoid double triggering interrupt
-  if(millis() - lastInterrupt > 100){
+  if(millis() - lastInterrupt > 400){
     hueIndex = (hueIndex + 1) % NUM_COLORS;
     lastInterrupt = millis();
   }
