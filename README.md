@@ -1,5 +1,5 @@
 # Wordclock
-Wordclock with German layout Arduino Nano project. Design inspired by [grahamvinyl on Imgur](https://imgur.com/a/dtLSy).
+Wordclock with German layout ESP32 project. Design inspired by [grahamvinyl on Imgur](https://imgur.com/a/dtLSy).
 
 ![Wordclock](doc/wordclock.jpg)
 
@@ -14,16 +14,8 @@ Libraries used:
  - Photoresistor for brightness measurement
 
 ## Functionality
-wordclock-basic:
- - Show current time to 5 min accuracy
+ - Show current time
  - Memorize time even when unplugged
- - Turn off light during the night
- 
-wordclock-advanced (additionally to basic):
  - Adjust brightness to room's lighting
  - Change color on button press
- - *Random shine effect (slow flickering/blinkin) (WIP)*
- - *Color effects (WIP)*
- - *Random animations when display changes (WIP)*
- - *Play Tetris (WIP, ESP32 needed)*
- - *Play Pong (WIP, ESP32 needed)*
+ - Adjust time +1 -1 +0 hours on button press (daylight saving time)
